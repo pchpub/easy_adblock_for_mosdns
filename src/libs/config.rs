@@ -105,16 +105,18 @@ impl Update for RuleSrcType {
                 let mut rules = vec![];
                 if want_accept_rule {
                     for line in content.lines() {
-                        if line.starts_with("||") && line.ends_with("^") {
-                            let rule_content = line.trim_start_matches("||").trim_end_matches("^");
+                        if line.starts_with("@@||") && line.ends_with("^") {
+                            // println!("{}", line);
+                            let rule_content =
+                                line.trim_start_matches("@@||").trim_end_matches("^");
                             rules.push(Rule::new(RuleType::Domain, rule_content.to_string()));
                         }
                     }
                 } else {
                     for line in content.lines() {
-                        if line.starts_with("@@||") && !line.ends_with("^") {
-                            let rule_content =
-                                line.trim_start_matches("@@||").trim_end_matches("^");
+                        if line.starts_with("||") && line.ends_with("^") {
+                            // println!("{}", line);
+                            let rule_content = line.trim_start_matches("||").trim_end_matches("^");
                             rules.push(Rule::new(RuleType::Domain, rule_content.to_string()));
                         }
                     }

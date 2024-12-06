@@ -11,7 +11,7 @@ lazy_static!(
 
 #[tokio::main]
 async fn main() {
-    let config = match Config::load("config.yaml") {
+    let config = match Config::load("config.json") {
         Ok(config) => config,
         Err(e) => {
             eprintln!("Failed to load config: {}", e);
@@ -28,7 +28,7 @@ async fn main() {
         .unwrap();
         let mut rules_vec = vec![];
         for rule_src in &config.rule_src {
-            let rules = rule_src.src_type.get(true).await.unwrap();
+            let rules = rule_src.src_type.get(accept_rule).await.unwrap();
             rules_vec.push(rules);
         }
         let rules = merge_and_remove_duplicates(rules_vec);

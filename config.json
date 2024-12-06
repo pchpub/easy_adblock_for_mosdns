@@ -2,25 +2,7 @@
   "rule_src": [
     {
       "src_type": {
-        "File": "rules.txt"
-      },
-      "auto_update": false
-    },
-    {
-      "src_type": {
-        "AdguardHomeRule": [
-          "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
-          true
-        ]
-      },
-      "auto_update": true
-    },
-    {
-      "src_type": {
-        "Geosite": [
-          "https://123",
-          "ad"
-        ]
+        "AdguardHomeRule": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockdns.txt"
       },
       "auto_update": true
     }
