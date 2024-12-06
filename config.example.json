@@ -1,0 +1,12 @@
+{
+  "rule_src": [
+    {
+      "src_type": {
+        "AdguardHomeRule": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockdns.txt"
+      },
+      "auto_update": true
+    }
+  ],
+  "accept_rule_path": "./accept.txt",
+  "reject_rule_path": "./reject.txt"
+}
