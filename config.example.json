@@ -2,6 +2,15 @@
   "rule_src": [
     {
       "src_type": {
+        "MosdnsFile": [
+          "/path/to/geosite_category-ads.txt",
+          false
+        ]
+      },
+      "auto_update": true
+    },
+    {
+      "src_type": {
         "AdguardHomeRule": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockdns.txt"
       },
       "auto_update": true
