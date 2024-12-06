@@ -54,4 +54,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-This project is licensed under no license.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
