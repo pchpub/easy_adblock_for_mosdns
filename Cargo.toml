@@ -1,0 +1,15 @@
+[package]
+name = "easy_adblock_for_mosdns"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lazy_static = "1.5.0"
+log = "0.4.22"
+reqwest = { version = "0.11.22", features = [
+    "socks",
+    "brotli",
+    "gzip",
+    "deflate",
+] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
