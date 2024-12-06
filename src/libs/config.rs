@@ -96,10 +96,23 @@ impl Update for RuleSrcType {
                     Some(HTTP_UA.to_owned()),
                     None,
                 );
-                let response = request_structure.execute().await;
-                if response.is_err() {
-                    return Err("Failed to get AdguardHomeRule".to_string());
-                }
+                // let response = request_structure.execute().await;
+                // if response.is_err() {
+                //     return Err("Failed to get AdguardHomeRule".to_string());
+                // }
+                let mut retry = 3;
+                let response = loop {
+                    let response = request_structure.execute().await;
+                    if response.is_err() {
+                        if retry > 0 {
+                            retry -= 1;
+                            continue;
+                        } else {
+                            return Err("Failed to get AdguardHomeRule".to_string());
+                        }
+                    }
+                    break response;
+                };
                 let response = response.unwrap();
                 let content = response.2;
                 let mut rules = vec![];
@@ -200,4 +213,22 @@ impl Config {
         file.write_all(json_config.as_bytes()).unwrap();
         Ok(())
     }
+}
+
+#[test]
+fn tset_config() {
+    let mut config = Config::new(vec![]);
+    config.add(RuleSrc::from_mosdns_file(
+        "/root/geosite/geosite_category-ads.txt".to_string(),
+        true,
+        true,
+    ));
+    config.add(RuleSrc::from_adguard_home_rule(
+        "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockdns.txt"
+            .to_string(),
+        true,
+    ));
+
+    config.save("config.json").unwrap();
+    let _config = Config::load("config.json").unwrap();
 }

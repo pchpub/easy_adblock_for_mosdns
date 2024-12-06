@@ -1,4 +1,4 @@
-use std::io::Write;
+use std::{env, io::Write};
 
 use easy_adblock_for_mosdns::libs::{
     config::Config, download::Update, tools::merge_and_remove_duplicates,
@@ -11,7 +11,14 @@ lazy_static!(
 
 #[tokio::main]
 async fn main() {
-    let config = match Config::load("config.json") {
+    let args = env::args().collect::<Vec<String>>();
+    let config_path = if args.len() > 1 {
+        args[1].as_str()
+    } else {
+        "./config.json"
+    };
+
+    let config = match Config::load(config_path) {
         Ok(config) => config,
         Err(e) => {
             eprintln!("Failed to load config: {}", e);
