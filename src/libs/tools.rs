@@ -26,13 +26,6 @@ pub fn merge_and_remove_duplicates(rules_vec: Vec<Vec<Rule>>) -> Vec<Rule> {
             for domain in rule_domain {
                 let mut found = false;
                 let mut current_domain_temp = current_domain.clone();
-                // for child in &mut current_domain.borrow_mut().children {
-                //     if child.borrow_mut().domain == domain {
-                //         current_domain_temp = child.clone();
-                //         found = true;
-                //         break;
-                //     }
-                // }
                 if current_domain.borrow().children.contains_key(domain) {
                     current_domain_temp = current_domain.borrow().children[domain].clone();
                     found = true;
@@ -45,16 +38,10 @@ pub fn merge_and_remove_duplicates(rules_vec: Vec<Vec<Rule>>) -> Vec<Rule> {
                         is_rule: false,
                         children: HashMap::new(),
                     };
-                    // current_domain
-                    //     .borrow_mut()
-                    //     .children
-                    //     .push(Rc::new(RefCell::new(new_domain)));
                     current_domain
                         .borrow_mut()
                         .children
                         .insert(domain.to_string(), Rc::new(RefCell::new(new_domain)));
-                    // current_domain_temp =
-                    //     current_domain.borrow_mut().children.last().unwrap().clone();
                     current_domain_temp = current_domain.borrow().children[domain].clone();
                     current_domain = current_domain_temp.clone();
                 }
@@ -72,8 +59,6 @@ pub fn merge_and_remove_duplicates(rules_vec: Vec<Vec<Rule>>) -> Vec<Rule> {
         }
     }
     let mut rules = vec![];
-
-    // println!("{:#?}", rules_tree.borrow().children);
 
     // convert rules_tree to rules
     let mut stack: Vec<(Rc<RefCell<Domain>>, usize)> = vec![]; // (domain, deepth)
@@ -111,6 +96,32 @@ pub fn merge_and_remove_duplicates(rules_vec: Vec<Vec<Rule>>) -> Vec<Rule> {
     }
 
     rules
+}
+
+#[test]
+fn test_merge() {
+    let rules_vec = vec![
+        vec![
+            Rule::new(RuleType::Domain, "a.b.c".to_string()),
+            Rule::new(RuleType::Domain, "b.c".to_string()),
+            Rule::new(RuleType::Domain, "c".to_string()),
+            Rule::new(RuleType::Full, "a.b.c.test.com".to_string()),
+            Rule::new(RuleType::Full, "1.a.test.com".to_string()),
+            Rule::new(RuleType::Full, "c.test.com".to_string()),
+            Rule::new(RuleType::Full, "test.com".to_string()),
+        ],
+        vec![
+            Rule::new(RuleType::Domain, "a.b.c".to_string()),
+            Rule::new(RuleType::Domain, "b.c".to_string()),
+            Rule::new(RuleType::Domain, "c".to_string()),
+            Rule::new(RuleType::Domain, "c.test.com".to_string()),
+        ],
+    ];
+    let rules = merge_and_remove_duplicates(rules_vec);
+    for rule in &rules {
+        println!("{}", rule);
+    }
+    assert_eq!(rules.len(), 4);
 }
 
 #[derive(Debug)]

@@ -1,0 +1,30 @@
+{
+  "rule_src": [
+    {
+      "src_type": {
+        "File": "rules.txt"
+      },
+      "auto_update": false
+    },
+    {
+      "src_type": {
+        "AdguardHomeRule": [
+          "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
+          true
+        ]
+      },
+      "auto_update": true
+    },
+    {
+      "src_type": {
+        "Geosite": [
+          "https://123",
+          "ad"
+        ]
+      },
+      "auto_update": true
+    }
+  ],
+  "accept_rule_path": "accept.txt",
+  "reject_rule_path": "reject.txt"
+}

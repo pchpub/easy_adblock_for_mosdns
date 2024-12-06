@@ -1,9 +1,7 @@
 use std::io::Write;
 
 use easy_adblock_for_mosdns::libs::{
-    config::{Config, RuleSrc, RuleSrcType},
-    download::Update,
-    tools::merge_and_remove_duplicates,
+    config::Config, download::Update, tools::merge_and_remove_duplicates,
 };
 use lazy_static::lazy_static;
 
@@ -13,24 +11,29 @@ lazy_static!(
 
 #[tokio::main]
 async fn main() {
-    let config = Config {
-        rule_src: vec![RuleSrc {
-            src_type: RuleSrcType::File("test.txt".to_string()),
-            auto_update: false,
-        }],
+    let config = match Config::load("config.yaml") {
+        Ok(config) => config,
+        Err(e) => {
+            eprintln!("Failed to load config: {}", e);
+            return;
+        }
     };
-    println!("Getting rules");
-    let rules = config.rule_src[0].src_type.get().await.unwrap();
-    println!("Got rules");
-    let rules_vec = vec![rules];
-    println!("Merging rules");
-    let rules = merge_and_remove_duplicates(rules_vec);
-    // save rules
-    let mut file = std::fs::File::create("rules.txt").unwrap();
 
-    for rule in rules {
-        // println!("{}", rule);
-        file.write_all(format!("{}\n", rule).as_bytes()).unwrap();
+    for accept_rule in [true, false] {
+        let mut file = std::fs::File::create(if accept_rule {
+            &config.accept_rule_path
+        } else {
+            &config.reject_rule_path
+        })
+        .unwrap();
+        let mut rules_vec = vec![];
+        for rule_src in &config.rule_src {
+            let rules = rule_src.src_type.get(true).await.unwrap();
+            rules_vec.push(rules);
+        }
+        let rules = merge_and_remove_duplicates(rules_vec);
+        for rule in rules {
+            file.write_all(format!("{}\n", rule).as_bytes()).unwrap();
+        }
     }
-    file.flush().unwrap();
 }

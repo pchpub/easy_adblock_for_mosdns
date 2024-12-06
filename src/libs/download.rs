@@ -2,5 +2,5 @@ use super::rule::Rule;
 use std::future::Future;
 
 pub trait Update {
-    fn get(&self) -> impl Future<Output = Result<Vec<Rule>, String>>;
+    fn get(&self, accept_rule: bool) -> impl Future<Output = Result<Vec<Rule>, String>>;
 }
